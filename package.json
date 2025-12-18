@@ -1,0 +1,40 @@
+{
+  "name": "backend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev:server": "ts-node ./src/index.ts",
+    "dev:worker": "ts-node ./src/index-worker.ts",
+    "dev": "concurrently npm:dev:*",
+    "build": "tsc",
+    "start:server": "node ./dist/index.js",
+    "start:worker": "node ./dist/index-worker.js",
+    "start": "concurrently npm:start:*",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "prepare": "husky && husky install"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.1.9",
+    "@vendure/asset-server-plugin": "3.5.1",
+    "@vendure/core": "3.5.1",
+    "@vendure/dashboard": "3.5.1",
+    "@vendure/email-plugin": "3.5.1",
+    "@vendure/graphiql-plugin": "3.5.1",
+    "dotenv": "17.2.3",
+    "google-auth-library": "^10.5.0",
+    "pg": "8.16.3"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.2.0",
+    "@commitlint/config-conventional": "^20.2.0",
+    "@typescript-eslint/eslint-plugin": "^8.50.0",
+    "@typescript-eslint/parser": "^8.50.0",
+    "@vendure/cli": "3.5.1",
+    "concurrently": "9.2.1",
+    "eslint-plugin-prettier": "^5.5.4",
+    "husky": "^8.0.0",
+    "prettier": "^3.7.4",
+    "typescript": "5.4.5"
+  }
+}

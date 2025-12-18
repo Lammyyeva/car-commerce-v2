@@ -1,0 +1,6 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Lint & Prettier
+npx eslint 'src/**/*.{ts,tsx}' --fix
+npx prettier --write 'src/**/*.{ts,tsx,js,jsx,json,css,md}'
