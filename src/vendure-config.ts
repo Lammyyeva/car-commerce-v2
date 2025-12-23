@@ -5,6 +5,7 @@ import {
   DefaultSearchPlugin,
   VendureConfig,
   RedisCacheStrategy,
+  RedisCachePlugin,
 } from "@vendure/core";
 import {
   defaultEmailHandlers,
@@ -16,9 +17,9 @@ import { DashboardPlugin } from "@vendure/dashboard/plugin";
 import { GraphiqlPlugin } from "@vendure/graphiql-plugin";
 import "dotenv/config";
 import path from "path";
-import { customFields } from "./apps/server/src/config/auth-config";
 import { AuthPlugin } from "./plugins/auth/auth.plugin";
-import { PhoneVerificationStrategy } from "./plugins/auth/strategies/phone.strategy";
+import { customFields } from "./apps/server/src/config/auth-config";
+import cookieParser from "cookie-parser";
 
 const IS_DEV = process.env.APP_ENV === "dev";
 const serverPort = +process.env.PORT || 3000;
@@ -32,18 +33,44 @@ export const config: VendureConfig = {
     // The following options are useful in development mode,
     // but are best turned off for production for security
     // reasons.
+    shopApiPlayground: {
+      settings: {
+        'request.credentials': 'include', // Enable cookies in GraphQL Playground
+      },
+    },
+    adminApiPlayground: {
+      settings: {
+        'request.credentials': 'include',
+      },
+    },
+    middleware: [
+    {
+      route: '*',
+      handler: cookieParser(process.env.COOKIE_SECRET)
+    }
+  ],
+  cors: {
+    credentials: true
+  },
     ...(IS_DEV
       ? {
-          adminApiDebug: true,
-          shopApiDebug: true,
-        }
+        adminApiDebug: true,
+        shopApiDebug: true,
+      }
       : {}),
   },
-  // cacheStrategy: new RedisCacheStrategy({
-    
-  // }),
+  // systemOptions: {
+  //   cacheStrategy: new RedisCacheStrategy({
+  //     redisOptions: 
+  //     {host: process.env.REDIS_HOST || 'localhost',
+  //     port: Number(process.env.REDIS_PORT) || 6379,
+  //     ...(process.env.REDIS_PASSWORD && {
+  //       password: process.env.REDIS_PASSWORD
+  //     }),}
+  //   }),
+  // },
   authOptions: {
-    tokenMethod: ["bearer", "cookie"],
+    tokenMethod: ["cookie"],
     superadminCredentials: {
       identifier: process.env.SUPERADMIN_USERNAME,
       password: process.env.SUPERADMIN_PASSWORD,
@@ -51,7 +78,6 @@ export const config: VendureConfig = {
     cookieOptions: {
       secret: process.env.COOKIE_SECRET,
     },
-    verificationTokenStrategy: new PhoneVerificationStrategy(),
   },
   dbConnectionOptions: {
     type: "postgres",
@@ -74,7 +100,6 @@ export const config: VendureConfig = {
   // need to be updated. See the "Migrations" section in README.md.
   customFields: customFields,
   plugins: [
-    AuthPlugin,
     GraphiqlPlugin.init(),
     AssetServerPlugin.init({
       route: "assets",
@@ -111,5 +136,12 @@ export const config: VendureConfig = {
         ? path.join(__dirname, "../dist/dashboard")
         : path.join(__dirname, "dashboard"),
     }),
+    AuthPlugin,
+    RedisCachePlugin.init({
+            redisOptions: {
+                host: process.env.REDIS_HOST || 'localhost',
+                port: Number(process.env.REDIS_PORT) || 6379
+            }
+        })
   ],
 };

@@ -1,34 +1,18 @@
-import { CustomFields, LanguageCode } from "@vendure/core";
+import { CustomFields } from "@vendure/core";
 
 export const customFields: CustomFields = {
-    // Customer: [
-    //     {
-    //         name: 'isPhoneOnlyAccount',
-    //         type: 'boolean',
-    //         public: true,
-    //         nullable: true,
-    //         defaultValue: false,
-    //         label: [{ languageCode: LanguageCode.en, value: 'Phone-Only Account'}],
-    //     },
-    //     {
-    //         name: 'preferredAccount',
-    //         type: 'string',
-    //         nullable: true,
-    //         public: true,
-    //         defaultValue: 'email',
-    //         options: [
-    //             {value: 'sms'},
-    //             {value: 'email'},
-    //             {value: 'both'},
-    //         ],
-    //         label: [{ languageCode: LanguageCode.en, value: 'preferred account'}]
-    //     }
-    // ],
     User: [
         {
             name: 'phoneNumber',
             type: 'string',
             nullable: true,
+            unique: true, // Important for preventing duplicates
+            //        validate: (value: string ) => {
+            //     // Add phone number validation
+            //       if (value && !/^\+?[1-9]\d{1,14}$/.test(value)) {
+            //       return 'Invalid phone number format';
+            //     }
+            //   },
         }
     ]
 }

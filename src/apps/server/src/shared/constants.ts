@@ -1,1 +1,3 @@
-export const VERIFY='VERIFY';
+export const VERIFY = 'VERIFY';
+export const REFRESH_TOKEN = 'REFRESH_TOKEN';
+export const FORGET_PASSWORD = 'FORGET_PASSWORD';

@@ -85,37 +85,27 @@ export class PhoneLoginStrategy implements AuthenticationStrategy<{
   }
 }
 
-export class PhoneVerificationStrategy implements VerificationTokenStrategy{
-  private cacheService: CacheService;
+// export class PhoneVerificationStrategy implements VerificationTokenStrategy{
+//   private cacheService: CacheService;
 
-  init(injector: Injector){
-    this.cacheService = injector.get(CacheService);
-  }
+//   init(injector: Injector){
+//     this.cacheService = injector.get(CacheService);
+//   }
 
-  async generateVerificationToken(ctx: RequestContext): Promise<string> {
-    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-
-    const key = this.getKey(ctx);
+//   async generateVerificationToken(ctx: RequestContext, phoneNumber: string): Promise<string> {
+//     const verificationCode = 
         
-    await this.cacheService.set(`${VERIFY}:${key}`, verificationCode, {ttl: Number( process.env.OTP_TTL)});
+//     await this.cacheService.set(`${VERIFY}:${phoneNumber}`, verificationCode, {ttl: Number( process.env.OTP_TTL)});
 
-    console.log('verificationCode set', verificationCode);
-    return 'success'
-  }
+//     console.log('verificationCode set', verificationCode);
+//     return 'success'
+//   }
 
-  async verifyVerificationToken(ctx: RequestContext, otp: string): Promise<boolean> {
-    const key = this.getKey(ctx);
+//   async verifyVerificationToken(ctx: RequestContext, otp: string, phoneNumber: string): Promise<boolean> {
 
-    const corectOtp = await this.cacheService.get(`${VERIFY}:${key}`);
+    
 
-    if (!corectOtp || corectOtp != Number(otp)) {
-      throw new BadRequestException('otp has expired or invalid');
-    }
+//     return true;
 
-    return true;
-
-  }
-  private getKey(ctx: RequestContext){
-    return `${ctx.activeUserId}`
-  }
-}
+//   }
+// }
